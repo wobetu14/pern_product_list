@@ -1,7 +1,7 @@
 import { db } from "./index";
 import { eq } from "drizzle-orm";
 import { users, products, comments } from "./schema";
-import { NewUser, NewProduct, NewComment } from "./schema";
+import { type NewUser, type NewProduct, type NewComment } from "./schema";
 
 // USER QUERIES
 export const createUser = async (data: NewUser) => {
