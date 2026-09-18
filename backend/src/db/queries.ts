@@ -1,7 +1,7 @@
 import { db } from "./index";
 import { eq } from "drizzle-orm";
 import { users, products, comments } from "./schema";
-import { type NewUser, type NewProduct, type NewComment } from "./schema";
+import type { NewUser, NewProduct, NewComment } from "./schema";
 
 // USER QUERIES
 export const createUser = async (data: NewUser) => {
@@ -75,6 +75,16 @@ export const deleteProduct = async (id: string) => {
 export const createComment = async (data: NewComment) => {
     const [comment] = await db.insert(comments).values(data).returning();
     return comment;
+};
+
+export const deleteComment = async (id: string) => {
+  const existingComment = await getCommentById(id);
+  if (!existingComment) {
+    throw new Error(`Comment with id ${id} not found`);
+  }
+
+  const [comment] = await db.delete(comments).where(eq(comments.id, id)).returning();
+  return comment;
 };
 
 export const getCommentById = async (id: string) => {
