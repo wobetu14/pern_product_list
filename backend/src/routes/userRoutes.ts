@@ -7,6 +7,6 @@ const router = Router();
 
 // /api/users/sync
 
-router.post("/sync", requireAuth, userController.syncUser);
+router.post("/sync", requireAuth(), userController.syncUser);
 
 export default router;
