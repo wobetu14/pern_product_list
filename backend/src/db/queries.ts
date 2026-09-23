@@ -19,7 +19,7 @@ export const updateUser = async (id: string, data: Partial<NewUser>) => {
 }
 
 // usert => create or update
-export const upsertUser = async (data: NewUser) => {
+export const upsertUser2 = async (data: NewUser) => {
     const [user] = await db
         .insert(users)
         .values(data)
@@ -28,6 +28,24 @@ export const upsertUser = async (data: NewUser) => {
     return user;
 };
 
+export const upsertUser = async (data: NewUser) => {
+  // this is what we have done first
+  // const existingUser = await getUserById(data.id);
+  // if (existingUser) return updateUser(data.id, data);
+
+  // return createUser(data);
+
+  // and this is what CR suggested
+  const [user] = await db
+    .insert(users)
+    .values(data)
+    .onConflictDoUpdate({
+      target: users.id,
+      set: data,
+    })
+    .returning();
+  return user;
+};
 // PRODUCT QUERIES
 export const createProduct = async (data: NewProduct) => {
     const [product] = await db.insert(products).values(data).returning();

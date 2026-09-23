@@ -11,10 +11,16 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
+
 app.use(clerkMiddleware());
-app.use(cors({
-    origin: ENV.FRONTEND_URL, // Replace with your frontend URL
-}));
+
 
 app.get('/', (req, res) => {
     res.json({
