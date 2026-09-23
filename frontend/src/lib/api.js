@@ -13,7 +13,7 @@ export const getAllProducts = async () => {
     return data;
 };
 
-export const getAllProductById = async (id) => {
+export const getProductById = async (id) => {
     const { data } = await api.get(`/products/${id}`);
     return data;
 };
