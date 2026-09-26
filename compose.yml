@@ -1,0 +1,74 @@
+version: "3.8"
+
+services:
+  # =========================
+  # FRONTEND - Vite + React
+  # =========================
+  web:
+    depends_on:
+      - api
+
+    build:
+      context: ./frontend
+
+    ports:
+      - "5173:5173"
+
+    environment:
+      VITE_CLERK_PUBLISHABLE_KEY: ${VITE_CLERK_PUBLISHABLE_KEY}
+      VITE_API_URL: ${VITE_API_URL}
+
+    develop:
+      watch:
+        # Rebuild when dependencies change
+        - path: ./frontend/package.json
+          action: rebuild
+
+        - path: ./frontend/package-lock.json
+          action: rebuild
+
+        # Sync source-code changes into the container
+        - path: ./frontend
+          target: /app
+          action: sync
+          ignore:
+            - node_modules/
+
+
+  # =========================
+  # BACKEND - Express API
+  # =========================
+  api:
+    depends_on: []
+
+    build:
+      context: ./backend
+
+    ports:
+      - "3000:3000"
+
+    environment:
+      PORT: ${PORT}
+      DATABASE_URL: ${DATABASE_URL}
+      NODE_ENV: ${NODE_ENV}
+
+      CLERK_PUBLISHABLE_KEY: ${CLERK_PUBLISHABLE_KEY}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+
+      FRONTEND_URL: ${FRONTEND_URL}
+
+    develop:
+      watch:
+        # Rebuild when dependencies change
+        - path: ./backend/package.json
+          action: rebuild
+
+        - path: ./backend/package-lock.json
+          action: rebuild
+
+        # Sync source-code changes into the container
+        - path: ./backend
+          target: /app
+          action: sync
+          ignore:
+            - node_modules/
